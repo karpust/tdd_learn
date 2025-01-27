@@ -8,14 +8,15 @@
 <body>
     <h1>Your To-Do list</h1>
     <form method="post">
-    <input name="item_text" id="id_new_item" placeholder="Enter a to-do item" />
+        <input name="item_text" id="id_new_item" placeholder="Enter a to-do item" />
         {% csrf_token %}
     </form>
-        <table id=”id_list_table”>
-            {% for item in items %}
-                <tr><td>1: {{ item.text }}</td></tr>
-            {% endfor %}
-        </table>
+
+    <table id="id_list_table">
+        {% for item in items %}
+            <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
+        {% endfor %}
+    </table>
 </body>
 <!--<!DOCTYPE html>-->
 </html>

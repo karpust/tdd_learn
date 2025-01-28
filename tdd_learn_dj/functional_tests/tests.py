@@ -1,15 +1,16 @@
+
 # import django
 # django.setup()
 
 from selenium import webdriver
 import unittest
 import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """тест нового посетителя"""
 
     def setUp(self):
@@ -21,7 +22,7 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.quit()
 
     def check_for_row_in_list_table(self, row_text):
-        '''подтверждение строки в таблице списка'''
+        """подтверждение строки в таблице списка"""
         table = self.browser.find_element(By.ID, 'id_list_table')
         rows = table.find_elements(By.TAG_NAME, 'tr')
         self.assertIn(row_text, [row.text for row in rows])
@@ -31,7 +32,8 @@ class NewVisitorTest(unittest.TestCase):
 
         # Эдит слышала про крутое новое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
-        self.browser.get('http://localhost:8000')
+        # self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         self.assertIn('To-Do', self.browser.title)
 
         # Она видит, что заголовок и шапка страницы говорят о списках
@@ -68,5 +70,5 @@ class NewVisitorTest(unittest.TestCase):
         self.fail('Закончить тест!')
 
 
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
+# if __name__ == '__main__':  # тесты настроены на запуск джангой
+#     unittest.main(warnings='ignore')

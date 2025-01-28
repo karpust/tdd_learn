@@ -26,4 +26,5 @@ def home_page(request):
         return redirect('/')
     # return render(request, 'home.html')
     items = Item.objects.all()
-    return render(request, 'home.html', {'items': items})
+    # return render(request, 'home.html', {'items': items})
+    return redirect('/lists/один-единственный-список-в-мире/')  # пока для одного

@@ -83,5 +83,9 @@ class ItemModelTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
 
+        # сначала не было личных списков, сначала сделаем для 1, в дальнейшем для многих:
+        self.assertEqual(response['location'], '/lists/один-единственный-список-в-мире/ ')
+
+
 
 

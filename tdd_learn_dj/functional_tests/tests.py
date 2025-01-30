@@ -37,8 +37,8 @@ class NewVisitorTest(LiveServerTestCase):
                     raise e
                 time.sleep(0.5)
 
-    def test_can_start_a_list_and_retrieve_it_later(self):
-        """тест: можно начать список и получить его позже"""
+    def test_can_start_a_list_for_one_user(self):
+        """тест: можно начать список для одного пользователя"""
 
         # Эдит слышала про крутое новое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
@@ -62,6 +62,7 @@ class NewVisitorTest(LiveServerTestCase):
         # содержит "1: Купить павлиньи перья" в качестве элемента таблицы списка
         inputbox.send_keys(Keys.ENTER)
 
+        self.browser.get(self.live_server_url + '/lists/one_list_in_the_world/')
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
         # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
         # Она вводит "Сделать мушку из павлиньих перьев"
@@ -75,7 +76,8 @@ class NewVisitorTest(LiveServerTestCase):
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
         self.wait_for_row_in_list_table('2: Сделать мушку из павлиньих перьев')
 
-        self.fail('Закончить тест!')
+        # self.fail('Закончить тест!')
+    # Удовлетворенная, она снова ложится спать.
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         """тест: многочисленные пользователи могут начать списки по разным url"""

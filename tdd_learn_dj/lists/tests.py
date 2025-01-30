@@ -15,35 +15,41 @@ from lists.models import Item
 class HomePageTest(TestCase):
     """тест домашней страницы"""
 
-    def test_home_page_returns_correct_html(self):
-        """тест: домашняя страница возвращает правильный html"""
+    def test_uses_home_template(self):
+        """тест: используется домашний шаблон"""
 
-        # тестируем не константы а логику:
-        response = self.client.get("/")
+        response = self.client.get('/')
         response = self.client.get(response['location'])
-        self.assertTemplateUsed(response=response, template_name='home.html')  # работает только для self.client
+        self.assertTemplateUsed(response, 'home.html')
 
     def test_can_save_a_POST_request(self):
         """тест: можно сохранить post-запрос"""
 
-        # аргумент data с данными формы, которые мы хотим отправить:
+        # Не сохранять пустые элементы для каждого запроса
+        # Код с душком: тест POST-запроса слишком длинный?
+        # Показывать несколько элементов в таблице
+        # Поддержка более чем одного списка!
+
+        self.client.post('/', data={'item_text': 'A new list item'})
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'A new list item')
+
+    def test_redirects_after_POST(self):
+        """тест: переадресует после post-запроса"""
+
         response = self.client.post('/', data={'item_text': 'A new list item'})
-        # self.assertIn('A new list item', response.content.decode())
-        # self.assertTemplateUsed(response, 'home.html')
+        self.assertEqual(response.status_code, 302)
 
-    def test_displays_all_list_items(self):
-        """тест: отображаются все элементы списка"""
-        Item.objects.create(text='itemey 1')
-        Item.objects.create(text='itemey 2')
+        # сначала не было личных списков, сначала сделаем для 1, в дальнейшем для многих:
+        self.assertEqual(response['location'], '/lists/one_list_in_the_world/')
 
-        response = self.client.get('/')
-        response = self.client.get(response['location'])  # достали адрес редиректа чтобы сделать на него запрос
-        # тк урл редиректа не обрабатывается вьюшкой автоматически, нужно сделать запрос
+    def test_only_saves_items_when_necessary(self):
+        """тест: сохраняет элементы, только когда нужно"""
 
-        # self.assertIn('itemey 1', response.content.decode())
-        # self.assertIn('itemey 2', response.content.decode())
-        self.assertContains(response, 'itemey 1')
-        self.assertContains(response, 'itemey 2')
+        self.client.get('/')
+        self.assertEqual(Item.objects.count(), 0)
 
 
 class ItemModelTest(TestCase):
@@ -66,33 +72,10 @@ class ItemModelTest(TestCase):
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second')
 
-    def test_can_save_a_POST_request(self):
-        """тест: можно сохранить post-запрос"""
-
-        # Не сохранять пустые элементы для каждого запроса
-        # Код с душком: тест POST-запроса слишком длинный?
-        # Показывать несколько элементов в таблице
-        # Поддержка более чем одного списка!
-
-        self.client.post('/', data={'item_text': 'A new list item'})
-
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, 'A new list item')
-
-
-    def test_redirects_after_POST(self):
-        """тест: переадресует после post-запроса"""
-
-        response = self.client.post('/', data={'item_text': 'A new list item'})
-        self.assertEqual(response.status_code, 302)
-
-        # сначала не было личных списков, сначала сделаем для 1, в дальнейшем для многих:
-        self.assertEqual(response['location'], '/lists/one_list_in_the_world/')
-
 
 class ListViewTest(TestCase):
     """тест представления списка"""
+
     def test_displays_all_items(self):
         """тест: отображаются все элементы списка"""
         Item.objects.create(text='itemey 1')
@@ -103,5 +86,13 @@ class ListViewTest(TestCase):
 
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
+
+    def test_uses_list_template(self):
+        """тест: используется шаблон списка"""
+
+        response = self.client.get('/lists/one_list_in_the_world/')
+        self.assertTemplateUsed(response, 'list.html')
+
+
 
 

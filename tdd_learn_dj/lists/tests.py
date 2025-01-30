@@ -3,7 +3,7 @@ import django
 django.setup()
 
 from django.test import TestCase
-from django.urls import resolve
+from django.urls import resolve, reverse
 from lists.views import home_page
 from django.http import HttpRequest
 from django.template.loader import render_to_string
@@ -20,6 +20,7 @@ class HomePageTest(TestCase):
 
         # тестируем не константы а логику:
         response = self.client.get("/")
+        response = self.client.get(response['location'])
         self.assertTemplateUsed(response=response, template_name='home.html')  # работает только для self.client
 
     def test_can_save_a_POST_request(self):
@@ -36,9 +37,13 @@ class HomePageTest(TestCase):
         Item.objects.create(text='itemey 2')
 
         response = self.client.get('/')
+        response = self.client.get(response['location'])  # достали адрес редиректа чтобы сделать на него запрос
+        # тк урл редиректа не обрабатывается вьюшкой автоматически, нужно сделать запрос
 
-        self.assertIn('itemey 1', response.content.decode())
-        self.assertIn('itemey 2', response.content.decode())
+        # self.assertIn('itemey 1', response.content.decode())
+        # self.assertIn('itemey 2', response.content.decode())
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
 
 
 class ItemModelTest(TestCase):
@@ -81,11 +86,22 @@ class ItemModelTest(TestCase):
 
         response = self.client.post('/', data={'item_text': 'A new list item'})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
 
         # сначала не было личных списков, сначала сделаем для 1, в дальнейшем для многих:
-        self.assertEqual(response['location'], '/lists/один-единственный-список-в-мире/ ')
+        self.assertEqual(response['location'], '/lists/one_list_in_the_world/')
 
 
+class ListViewTest(TestCase):
+    """тест представления списка"""
+    def test_displays_all_items(self):
+        """тест: отображаются все элементы списка"""
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = self.client.get(reverse('view_list'))
+        # response = self.client.get('/lists/one_list_in_the_world/')
+
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
 
 

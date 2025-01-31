@@ -19,7 +19,7 @@ class HomePageTest(TestCase):
         """тест: используется домашний шаблон"""
 
         response = self.client.get('/')
-        response = self.client.get(response['location'])
+        # response = self.client.get(response['location'])
         self.assertTemplateUsed(response, 'home.html')
 
     def test_can_save_a_POST_request(self):

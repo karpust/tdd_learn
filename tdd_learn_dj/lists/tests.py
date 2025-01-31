@@ -22,35 +22,6 @@ class HomePageTest(TestCase):
         # response = self.client.get(response['location'])
         self.assertTemplateUsed(response, 'home.html')
 
-    def test_can_save_a_POST_request(self):
-        """тест: можно сохранить post-запрос"""
-
-        # Не сохранять пустые элементы для каждого запроса
-        # Код с душком: тест POST-запроса слишком длинный?
-        # Показывать несколько элементов в таблице
-        # Поддержка более чем одного списка!
-
-        self.client.post('/', data={'item_text': 'A new list item'})
-
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, 'A new list item')
-
-    def test_redirects_after_POST(self):
-        """тест: переадресует после post-запроса"""
-
-        response = self.client.post('/', data={'item_text': 'A new list item'})
-        self.assertEqual(response.status_code, 302)
-
-        # сначала не было личных списков, сначала сделаем для 1, в дальнейшем для многих:
-        self.assertEqual(response['location'], '/lists/one_list_in_the_world/')
-
-    def test_only_saves_items_when_necessary(self):
-        """тест: сохраняет элементы, только когда нужно"""
-
-        self.client.get('/')
-        self.assertEqual(Item.objects.count(), 0)
-
 
 class ItemModelTest(TestCase):
     """тест модели элемента списка"""
@@ -93,6 +64,31 @@ class ListViewTest(TestCase):
         response = self.client.get('/lists/one_list_in_the_world/')
         self.assertTemplateUsed(response, 'list.html')
 
+
+class NewListTest(TestCase):
+    """тест нового списка"""
+
+    def test_can_save_a_POST_request(self):
+        """тест: можно сохранить post-запрос"""
+
+        self.client.post('/lists/new', data={'item_text': 'A new list item'})
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'A new list item')
+
+    def test_redirects_after_POST(self):
+        """тест: переадресует после post-запроса"""
+
+        response = self.client.post('/lists/new', data={'item_text': 'A new list item'})
+
+        self.assertRedirects(response, '/lists/one_list_in_the_world/')
+        # AssertionError: 404 != 302 : Response didn't redirect as expected: Response code was 404 (expected 302)
+        # вместо:
+        # self.assertEqual(response.status_code, 302)  # AssertionError: 404 != 302
+
+        # сначала не было личных списков, сначала сделаем для 1, в дальнейшем для многих:
+        self.assertEqual(response['location'], '/lists/one_list_in_the_world/')
 
 
 

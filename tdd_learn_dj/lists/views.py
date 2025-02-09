@@ -13,8 +13,8 @@ def home_page(request):
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
-    items = Item.objects.filter(list=list_)
-    return render(request, 'list.html', {'items': items})
+    # items = Item.objects.filter(list=list_)
+    return render(request, 'list.html', {'list': list_})  # 'items': items,
 
 def new_list(request):
     """новый список"""
@@ -22,3 +22,8 @@ def new_list(request):
     Item.objects.create(text=request.POST['item_text'], list=list_)
     # return redirect('/lists/one_list_in_the_world/')
     return redirect(f'/lists/{list_.id}/')
+
+def new_item(request, list_id):
+    list_ = List.objects.get(id=list_id)
+    Item.objects.create(text=request.POST['item_text'], list=list_)
+    return redirect(f'/lists/{list_id}/')

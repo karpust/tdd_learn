@@ -62,7 +62,7 @@ class NewVisitorTest(LiveServerTestCase):
         # содержит "1: Купить павлиньи перья" в качестве элемента таблицы списка
         inputbox.send_keys(Keys.ENTER)
 
-        self.browser.get(self.live_server_url + '/lists/one_list_in_the_world/')
+        self.browser.get(self.live_server_url + '/lists/1/')
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
         # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
         # Она вводит "Сделать мушку из павлиньих перьев"

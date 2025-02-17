@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 import os
 
 # load_dotenv('C:/Users/k/PycharmProjects/tdd_learn/.env')
-load_dotenv('~/my_sites/superlists-staging.ot.eu/.env')
+load_dotenv('/home/karry/my_sites/superlists-staging.ot.eu/.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent

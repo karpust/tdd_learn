@@ -10,7 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
-from decouple import config
+import os
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -22,7 +22,7 @@ class NewVisitorTest(LiveServerTestCase):
         """установка"""
         self.browser = webdriver.Firefox()
         # staging_server = os.environ.get('STAGING_SERVER')
-        staging_server = config('STAGING_SERVER')
+        staging_server = os.getenv('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
 

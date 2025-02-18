@@ -11,6 +11,7 @@ from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import os
+from selenium.webdriver.firefox.options import Options
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -20,7 +21,10 @@ class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         """установка"""
-        self.browser = webdriver.Firefox()
+        options = Options()
+        options.headless = True
+        # self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(options=options)
         # staging_server = os.environ.get('STAGING_SERVER')
         staging_server = os.getenv('STAGING_SERVER')
         if staging_server:

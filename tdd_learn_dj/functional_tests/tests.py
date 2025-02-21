@@ -40,8 +40,9 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         """демонтаж"""
         self.browser.quit()
-        self.xvfb_process.terminate()  # Останавливаем Xvfb
-        super().tearDownClass()
+        # self.xvfb_process.terminate()  # Останавливаем Xvfb
+        self.xvfb_process.kill()  # Принудительно завершаем Xvfb
+        self.xvfb_process.wait()  # Дожидаемся завершения процесса
 
     def wait_for_row_in_list_table(self, row_text):
         """ожидать строку в таблице списка"""

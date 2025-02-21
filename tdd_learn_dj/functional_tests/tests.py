@@ -22,16 +22,7 @@ class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         """установка"""
 
-        # Запускаем виртуальный дисплей:
-        import subprocess
-        self.xvfb_process = subprocess.Popen(["Xvfb", ":99", "-screen", "0", "1920x1080x24"])
-        os.environ["DISPLAY"] = ":99"
-
-        # options = Options()
-        # options.headless = True
         self.browser = webdriver.Firefox()
-        # self.browser = webdriver.Firefox(options=options)
-        # staging_server = os.environ.get('STAGING_SERVER')
         staging_server = os.getenv('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
@@ -40,9 +31,6 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         """демонтаж"""
         self.browser.quit()
-        # self.xvfb_process.terminate()  # Останавливаем Xvfb
-        self.xvfb_process.kill()  # Принудительно завершаем Xvfb
-        self.xvfb_process.wait()  # Дожидаемся завершения процесса
 
     def wait_for_row_in_list_table(self, row_text):
         """ожидать строку в таблице списка"""

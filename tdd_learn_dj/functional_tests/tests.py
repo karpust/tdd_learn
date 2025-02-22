@@ -11,7 +11,6 @@ from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import os
-from selenium.webdriver.firefox.options import F
 from selenium.webdriver.firefox.service import Service
 
 

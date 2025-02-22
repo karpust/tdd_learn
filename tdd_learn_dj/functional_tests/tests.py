@@ -12,7 +12,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import os
 from selenium.webdriver.firefox.service import Service
-
+import logging
 
 class NewVisitorTest(LiveServerTestCase):
 # class NewVisitorTest(StaticLiveServerTestCase):
@@ -27,6 +27,8 @@ class NewVisitorTest(LiveServerTestCase):
         staging_server = os.getenv('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
+        else:
+            logging.error("staging_server не установлен")
 
 
     def tearDown(self):
@@ -53,6 +55,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Эдит слышала про крутое новое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
         # self.browser.get('http://localhost:8000')
+        logging.info(f'подключаюсь к {self.live_server_url}')
         self.browser.get(self.live_server_url)
         self.assertIn('To-Do', self.browser.title)
 

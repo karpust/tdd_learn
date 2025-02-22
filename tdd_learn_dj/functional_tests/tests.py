@@ -11,7 +11,7 @@ from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import os
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import F
 from selenium.webdriver.firefox.service import Service
 
 
@@ -22,7 +22,7 @@ class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         """установка"""
-        options = Options()
+        options = webdriver.FirefoxOptions()
         options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
         self.browser = webdriver.Firefox(service=Service(executable_path='/snap/bin/geckodriver'), options=options)
         staging_server = os.getenv('STAGING_SERVER')

@@ -23,7 +23,7 @@ class NewVisitorTest(LiveServerTestCase):
         """установка"""
         options = webdriver.FirefoxOptions()
         options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
-        self.browser = webdriver.Firefox(service=Service(executable_path='/snap/bin/geckodriver'), options=options)
+        self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver'), options=options)
         staging_server = os.getenv('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server

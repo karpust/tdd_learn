@@ -36,6 +36,8 @@ class NewVisitorTest(LiveServerTestCase):
         staging_server = os.getenv('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
+            logger.info(f'адрес сервера {self.live_server_url}')
+
         else:
             logger.error("staging_server не установлен")
 

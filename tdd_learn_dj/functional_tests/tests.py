@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class NewVisitorTest(LiveServerTestCase):
 # class NewVisitorTest(StaticLiveServerTestCase):
     """тест нового посетителя"""
-    MAX_WAIT = 20
+    MAX_WAIT = 10
 
     def setUp(self):
         """установка"""
@@ -108,7 +108,7 @@ class NewVisitorTest(LiveServerTestCase):
         # содержит "1: Купить павлиньи перья" в качестве элемента таблицы списка
         inputbox.send_keys(Keys.ENTER)
 
-        self.browser.get(self.live_server_url + '/lists/1/')
+        # self.browser.get(self.live_server_url + '/lists/1/')
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
         # Текствое поле по-прежнему приглашает ее добавить еще один элемент.
         # Она вводит "Сделать мушку из павлиньих перьев"

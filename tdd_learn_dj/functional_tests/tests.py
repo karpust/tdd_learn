@@ -71,7 +71,10 @@ class NewVisitorTest(LiveServerTestCase):
         # неотложных дел. Она решает оценить его домашнюю страницу
         # self.browser.get('http://localhost:8000')
         logger.info(f'подключаюсь к {self.live_server_url}')
-        self.browser.get(self.live_server_url)
+        try:
+            self.browser.get(self.live_server_url)
+        except (WebDriverException, Exception) as e:
+            raise e
         self.assertIn('To-Do', self.browser.title)
 
         # Она видит, что заголовок и шапка страницы говорят о списках

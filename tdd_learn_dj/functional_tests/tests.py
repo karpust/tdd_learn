@@ -18,8 +18,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class NewVisitorTest(LiveServerTestCase):
-# class NewVisitorTest(StaticLiveServerTestCase):
+# class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     """тест нового посетителя"""
     MAX_WAIT = 10
 

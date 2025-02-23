@@ -29,17 +29,21 @@ class NewVisitorTest(LiveServerTestCase):
         # logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
         logging.basicConfig(filename="test.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
         logger.info("настройка тестов setUp")
+        try:
+            options = webdriver.FirefoxOptions()
+            options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
+            self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
 
-        options = webdriver.FirefoxOptions()
-        options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
-        self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
-        staging_server = os.getenv('STAGING_SERVER')
-        if staging_server:
-            self.live_server_url = 'http://' + staging_server
-            logger.info(f'адрес сервера {self.live_server_url}')
+            staging_server = os.getenv('STAGING_SERVER')
+            if staging_server:
+                self.live_server_url = 'http://' + staging_server
+                logger.info(f'адрес сервера {self.live_server_url}')
 
-        else:
-            logger.error("staging_server не установлен")
+            else:
+                logger.error("staging_server не установлен")
+            logger.info("настройка тестов setUp завершена")
+        except (WebDriverException, Exception) as e:
+            raise e
 
 
     def tearDown(self):

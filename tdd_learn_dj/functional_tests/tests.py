@@ -11,7 +11,8 @@ from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import os
-from selenium.webdriver.firefox.service import Service
+# from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.chrome.service import Service
 import logging
 
 
@@ -42,8 +43,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
             options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server
             logger.info("настройка браузера")
             # self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
-            service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver')
-            self.browser = webdriver.Chrome(service=service, options=options)  # , log_output="chromedriver.log" for FirefoxOptions
+            service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver', log_output="chromedriver.log")
+            self.browser = webdriver.Chrome(service=service, options=options)
             logger.info("настройка webdriver завершена")
 
 

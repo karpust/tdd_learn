@@ -35,6 +35,7 @@ class NewVisitorTest(LiveServerTestCase):
             self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
 
             staging_server = os.getenv('STAGING_SERVER')
+            logger.info(f'staging_server is {staging_server}')
             if staging_server:
                 self.live_server_url = 'http://' + staging_server
                 logger.info(f'адрес сервера {self.live_server_url}')

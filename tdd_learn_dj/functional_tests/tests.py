@@ -22,13 +22,13 @@ class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         """установка"""
         # Настроим логирование
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
-        # logging.basicConfig(filename="test.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+        # logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
+        logging.basicConfig(filename="test.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
         self.logger = logging.getLogger(__name__)
 
         options = webdriver.FirefoxOptions()
         options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
-        self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver'), options=options)
+        self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
         staging_server = os.getenv('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server

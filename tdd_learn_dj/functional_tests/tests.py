@@ -33,18 +33,18 @@ class NewVisitorTest(LiveServerTestCase):
         try:
             logger.info("настройка webdriver")
             # options = webdriver.FirefoxOptions()
-            options = webdriver.ChromeOptions()
-            options.add_argument("--headless")  # Запуск без GUI
-            options.add_argument("--disable-gpu")  # Отключение GPU
-            options.add_argument("--no-sandbox")  # Отключение песочницы
-            options.add_argument("--disable-dev-shm-usage")  # Для избежания проблем с памятью
+            self.options = webdriver.ChromeOptions()
+            self.options.add_argument("--headless")  # Запуск без GUI
+            self.options.add_argument("--disable-gpu")  # Отключение GPU
+            self.options.add_argument("--no-sandbox")  # Отключение песочницы
+            self.options.add_argument("--disable-dev-shm-usage")  # Для избежания проблем с памятью
             logger.info("настройка options")
             # options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
-            options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server
+            self.options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server
             logger.info("настройка браузера")
             # self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
-            service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver', log_output="chromedriver.log")
-            self.browser = webdriver.Chrome(service=service, options=options)
+            self.service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver', log_output="chromedriver.log")
+            self.browser = webdriver.Chrome(service=self.service, options=self.options)
             logger.info("настройка webdriver завершена")
 
 
@@ -144,7 +144,8 @@ class NewVisitorTest(LiveServerTestCase):
         ## Мы используем новый сеанс браузера, тем самым обеспечивая, чтобы никакая
         ## информация от Эдит не прошла через данные cookie и пр.
         self.browser.quit()
-        self.browser = webdriver.Firefox()
+        # self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome(service=self.service, options=self.options)
         # Фрэнсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
         self.browser.get(self.live_server_url)
 

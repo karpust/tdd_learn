@@ -30,12 +30,16 @@ class NewVisitorTest(LiveServerTestCase):
         logging.basicConfig(filename="test.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
         logger.info("настройка тестов setUp")
         try:
-            options = webdriver.FirefoxOptions()
-            logger.info("настройка options")
-            options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
-            logger.info("настройка firefox")
-            self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
             logger.info("настройка webdriver")
+            # options = webdriver.FirefoxOptions()
+            options = webdriver.ChromeOptions()
+            logger.info("настройка options")
+            # options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
+            options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server
+            logger.info("настройка браузера")
+            # self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
+            self.browser = webdriver.Chrome(service=Service(executable_path='/usr/local/bin/chromedriver-linux64', log_output="chroomedriver.log"), options=options)
+            logger.info("настройка webdriver завершена")
 
 
             staging_server = os.getenv('STAGING_SERVER')

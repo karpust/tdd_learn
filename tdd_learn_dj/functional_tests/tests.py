@@ -42,7 +42,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
             options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server
             logger.info("настройка браузера")
             # self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
-            self.browser = webdriver.Chrome(service=Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver', log_output="chromedriver.log"), options=options)
+            service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver')
+            self.browser = webdriver.Chrome(service=service, options=options)  # , log_output="chromedriver.log" for FirefoxOptions
             logger.info("настройка webdriver завершена")
 
 

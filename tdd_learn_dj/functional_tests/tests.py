@@ -31,8 +31,12 @@ class NewVisitorTest(LiveServerTestCase):
         logger.info("настройка тестов setUp")
         try:
             options = webdriver.FirefoxOptions()
+            logger.info("настройка options")
             options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
+            logger.info("настройка firefox")
             self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
+            logger.info("настройка webdriver")
+
 
             staging_server = os.getenv('STAGING_SERVER')
             logger.info(f'staging_server is {staging_server}')

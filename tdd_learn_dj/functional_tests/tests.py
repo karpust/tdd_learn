@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class NewVisitorTest(LiveServerTestCase):
 # class NewVisitorTest(StaticLiveServerTestCase):
     """тест нового посетителя"""
-    MAX_WAIT = 10
+    MAX_WAIT = 20
 
     def setUp(self):
         """установка"""

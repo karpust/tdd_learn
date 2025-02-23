@@ -14,6 +14,10 @@ import os
 from selenium.webdriver.firefox.service import Service
 import logging
 
+
+logger = logging.getLogger(__name__)
+
+
 class NewVisitorTest(LiveServerTestCase):
 # class NewVisitorTest(StaticLiveServerTestCase):
     """тест нового посетителя"""
@@ -24,7 +28,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Настроим логирование
         # logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
         logging.basicConfig(filename="test.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
-        self.logger = logging.getLogger(__name__)
+        logger.info("настройка тестов setUp")
 
         options = webdriver.FirefoxOptions()
         options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
@@ -33,7 +37,7 @@ class NewVisitorTest(LiveServerTestCase):
         if staging_server:
             self.live_server_url = 'http://' + staging_server
         else:
-            self.logger.error("staging_server не установлен")
+            logger.error("staging_server не установлен")
 
 
     def tearDown(self):
@@ -60,7 +64,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Эдит слышала про крутое новое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
         # self.browser.get('http://localhost:8000')
-        self.logger.info(f'подключаюсь к {self.live_server_url}')
+        logger.info(f'подключаюсь к {self.live_server_url}')
         self.browser.get(self.live_server_url)
         self.assertIn('To-Do', self.browser.title)
 

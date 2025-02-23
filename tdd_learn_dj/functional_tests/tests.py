@@ -33,6 +33,10 @@ class NewVisitorTest(StaticLiveServerTestCase):
             logger.info("настройка webdriver")
             # options = webdriver.FirefoxOptions()
             options = webdriver.ChromeOptions()
+            options.add_argument("--headless")  # Запуск без GUI
+            options.add_argument("--disable-gpu")  # Отключение GPU
+            options.add_argument("--no-sandbox")  # Отключение песочницы
+            options.add_argument("--disable-dev-shm-usage")  # Для избежания проблем с памятью
             logger.info("настройка options")
             # options.binary_location = '/usr/bin/firefox'  # for ubuntu-server
             options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server

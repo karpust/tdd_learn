@@ -29,9 +29,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+# Необходимо, когда DEBUG=False:
+ALLOWED_HOSTS = ['95.31.180.169']
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver', '95.31.180.169']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
 
 
 # Application definition

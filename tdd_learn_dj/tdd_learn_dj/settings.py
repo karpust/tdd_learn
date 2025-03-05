@@ -133,3 +133,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [os.getenv('SERVER_IP')]
+
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../static'))

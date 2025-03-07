@@ -11,8 +11,8 @@ REPO_URL = 'https://github.com/karpust/tdd_learn.git'
 @task
 def deploy(c):
     """Развернуть проект на сервере"""
-    site_folder = f'/home/{c.user}/my_sites/{c.host}'  #  переназови хост!!
-    source_folder = f'{site_folder}/tdd_learn'
+    site_folder = f'/home/{c.user}/my_sites/{c.host}'
+    source_folder = f'{site_folder}/tdd_learn'  # должно быть source - для многоразового использования
 
     _create_directory_structure_if_necessary(c, site_folder)
     _get_latest_source(c, source_folder)
@@ -20,6 +20,8 @@ def deploy(c):
     _update_virtualenv(c, source_folder)
     _update_static_files(c, source_folder)
     _update_database(c, source_folder)
+
+    # _deploy_nginx_config(c, c.host, source_folder)
 
 """
 c — это параметр, который передаётся в функцию при вызове задачи, 
@@ -41,7 +43,7 @@ Fabric автоматически подключается к серверу п�
 """
 def _create_directory_structure_if_necessary(c, site_folder):
     """Создает структуру директорий, если ее нет"""
-    for subfolder in ('database', 'static', 'my_env', 'tdd_learn'):
+    for subfolder in ('database', 'static', 'my_env', 'tdd_learn'):  # source
         c.run(f'mkdir -p {site_folder}/{subfolder}')
         # c.run() - выполнение команды в оболочке сервера
 
@@ -91,19 +93,21 @@ def _update_settings(c, source_folder, site_name):
     команда sed для замены текста:
     sed -i "s/старый_текст/новый_текст/" файл.py
     редактирует файл на месте - без создания временных копий
-    sed — потоковый редактор, обрабатывает текст, -i - на месте;
+    sed (от «stream editor» – потоковый редактор) принимает поток текста и
+    выполняет с ним операции правки;
+    -i - на месте;
     разрешаем только один хост в ALLOWED_HOSTS;
     если secret_key джанги есть в репозитории, то генерим новый,
     (между развертывания он не должен отличаться),
     сохраняем в файл и добавляем в settings.py импорт из него.
     
     """
-    # settings_path = f'{source_folder}/tdd_learn_dj/settings.py'
+    # settings_path = f'{source_folder}/source/settings.py'
     settings_path = f'{source_folder}/tdd_learn_dj/tdd_learn_dj/settings.py'
     c.run(f'sed -i "s/DEBUG = True/DEBUG = False/" {settings_path}')
     c.run(f'sed -i "s/ALLOWED_HOSTS = .*/ALLOWED_HOSTS = [\'{site_name}\']/" {settings_path}')
 
-    # secret_key_file = source_folder + '/tdd_learn_dj/secret_key.py'
+    # secret_key_file = source_folder + '/source/secret_key.py'
     secret_key_file = source_folder + '/tdd_learn_dj/tdd_learn_dj/secret_key.py'
     if not exists(c, secret_key_file):
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
@@ -139,3 +143,30 @@ def _update_database(c, source_folder):
     
     """
     c.run(f'cd {source_folder}/tdd_learn_dj && ../../my_env/bin/python manage.py migrate --noinput')
+
+
+# хотела и конфиги для nginx and gunicorn настроить и передать через fabfile
+# но уперлась в необходимость вводить пароль для sudo.
+# def _deploy_nginx_config(c, site_name, source_folder):
+#     # Копирую конфиг на сервер:
+#     template_config_path = f'{source_folder}/tdd_learn_dj/deploy-tools/nginx.template.conf'
+#     remote_config_path = f'/etc/nginx/sites-available/{site_name}'
+#     c.run(f'sed s/SITENAME/{site_name}/g {template_config_path} | sudo tee {remote_config_path}')
+#     # c.put(template_config_path, remote_config_path) # для переноса с локальной машины на сервер
+#
+#     # Создаю символьную ссылку в sites-enabled
+#     # c.run(f'ln -s {remote_config_path} /etc/nginx/sites-enabled/{site_name}')
+#     # если ссылка уже существует, ln -s выдаст ошибку, но || true подавит её.
+#     c.run(f'ln -s {remote_config_path} /etc/nginx/sites-enabled/{site_name}.conf || true')
+#
+#
+#     # Проверяю конфигурацию Nginx
+#     result = c.run('sudo nginx -t', warn=True)
+#     # -t проверка без перезапуска nginx
+#     # warn=True чтобы не упал, и дал мне обработать вручную:
+#     if result.failed:
+#         print("Ошибка в конфигурации Nginx!")
+#         return
+#
+#     # Перезапускаю Nginx
+#     c.sudo('systemctl restart nginx')

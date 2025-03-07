@@ -3,32 +3,32 @@
 # django.setup()
 
 from selenium import webdriver
-import unittest
+# import unittest
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
+# from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import os
 # from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.chrome.service import Service
 import logging
+from unittest import skip
 
 
 logger = logging.getLogger(__name__)
 
-
-class NewVisitorTest(LiveServerTestCase):
-# class NewVisitorTest(StaticLiveServerTestCase):
-    """тест нового посетителя"""
+class FunctionalTest(StaticLiveServerTestCase):
+    """функциональный тест"""
     MAX_WAIT = 10
 
     def setUp(self):
         """установка"""
         # Настроим логирование
         # logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
-        logging.basicConfig(filename="test.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
+        logging.basicConfig(filename="test.log", level=logging.INFO,
+                            format="%(asctime)s - %(levelname)s - %(message)s - %(name)s")
         logger.info("настройка тестов setUp")
         try:
             logger.info("настройка webdriver")
@@ -43,10 +43,10 @@ class NewVisitorTest(LiveServerTestCase):
             self.options.binary_location = '/usr/bin/google-chrome'  # for ubuntu-server
             logger.info("настройка браузера")
             # self.browser = webdriver.Firefox(service=Service(executable_path='/usr/bin/geckodriver', log_output="geckodriver.log"), options=options)
-            self.service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver', log_output="chromedriver.log")
+            self.service = Service(executable_path='/usr/local/bin/chromedriver-linux64/chromedriver',
+                                   log_output="chromedriver.log")
             self.browser = webdriver.Chrome(service=self.service, options=self.options)
             logger.info("настройка webdriver завершена")
-
 
             staging_server = os.getenv('STAGING_SERVER')
             logger.info(f'staging_server is {staging_server}')
@@ -59,7 +59,6 @@ class NewVisitorTest(LiveServerTestCase):
             logger.info("настройка тестов setUp завершена")
         except (WebDriverException, Exception) as e:
             raise e
-
 
     def tearDown(self):
         """демонтаж"""
@@ -78,6 +77,10 @@ class NewVisitorTest(LiveServerTestCase):
                 if time.time() - start_time > self.MAX_WAIT:
                     raise e
                 time.sleep(0.5)
+
+
+class NewVisitorTest(FunctionalTest):
+    """тест нового посетителя"""
 
     def test_can_start_a_list_for_one_user(self):
         """тест: можно начать список для одного пользователя"""
@@ -169,6 +172,9 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Купить павлиньи перья', page_text)
         self.assertIn('Купить молоко', page_text)
 
+class LayoutAndStylingTest(FunctionalTest):
+    """тест макета и стилевого оформления"""
+
     def test_layout_and_styling(self):
         """тест макета и стилевого оформления"""
         # Эдит открывает домашнюю страницу
@@ -198,6 +204,25 @@ class NewVisitorTest(LiveServerTestCase):
             512,
             delta=10
         )
+
+
+class ItemValidationTest(FunctionalTest):
+    """класс валидации элемента списка"""
+
+@skip
+def test_cannot_add_empty_list_items(self):
+    """тест: нельзя добавлять пустые элементы списка"""
+
+    # Эдит открывает домашнюю страницу и случайно пытается отправить
+    # пустой элемент списка. Она нажимает Enter на пустом поле ввода
+    # Домашняя страница обновляется, и появляется сообщение об ошибке,
+    # которое говорит, что элементы списка не должны быть пустыми
+    # Она пробует снова, теперь с неким текстом для элемента, и теперь
+    # это срабатывает
+    # Как ни странно, Эдит решает отправить второй пустой элемент списка
+    # Она получает аналогичное предупреждение на странице списка
+    # И она может его исправить, заполнив поле неким текстом
+    self.fail('напиши меня!')
 
 
 # if __name__ == '__main__':  # тесты настроены на запуск джангой

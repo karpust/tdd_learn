@@ -10,10 +10,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class FunctionalTest(StaticLiveServerTestCase):
     """функциональный тест"""
-    MAX_WAIT = 10
+    def __init__(self):
+        super().__init__()
+        self.max_wait = 10
+
 
     def setUp(self):
         """установка"""
@@ -66,7 +68,24 @@ class FunctionalTest(StaticLiveServerTestCase):
                 self.assertIn(row_text, [row.text for row in rows])
                 return
             except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > self.MAX_WAIT:
+                if time.time() - start_time > self.max_wait:
+                    raise e
+                time.sleep(0.5)
+
+    def wait_for(self, fn):
+        """ожидать"""
+        """
+        запускает ассерт обернутый в лямбду;
+        если выкинет исключение, то подождет и опять попробует,
+        если выполнится то покинет цикл благодяря return
+        """
+
+        start_time = time.time()
+        while True:
+            try:
+                return fn()
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > self.max_wait:
                     raise e
                 time.sleep(0.5)
 
